@@ -1,0 +1,21 @@
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:bal="http://wixtoolset.org/schemas/v4/wxs/bal">
+  <Bundle
+    Name="Astra Language Setup"
+    Manufacturer="Astra"
+    Version="$(var.BundleVersion)"
+    UpgradeCode="{F4D0B3EA-9C8A-4F40-9D9C-FA40B0A9AA10}">
+
+    <BootstrapperApplication>
+      <bal:WixStandardBootstrapperApplication Theme="rtfLicense" LicenseFile="installer\LICENSE.rtf" />
+    </BootstrapperApplication>
+
+    <Chain>
+      <MsiPackage
+        Id="AstraMsi"
+        SourceFile="dist-msi\AstraInstall.msi"
+        DisplayInternalUI="yes"
+        Visible="yes" />
+    </Chain>
+  </Bundle>
+</Wix>

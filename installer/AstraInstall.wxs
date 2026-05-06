@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Product
+    Id="*"
+    Name="Astra Language"
+    Language="1046"
+    Version="0.2.0"
+    Manufacturer="Astra"
+    UpgradeCode="{A2D2537C-2AB7-4F58-9B13-32CDB7A3C418}">
+
+    <Package InstallerVersion="500" Compressed="yes" InstallScope="perUser" />
+
+    <MajorUpgrade DowngradeErrorMessage="Ja existe uma versao mais recente do Astra instalada." />
+    <MediaTemplate EmbedCab="yes" />
+
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLROOT" />
+    <Property Id="WIXUI_EXITDIALOGOPTIONALTEXT" Value="Instalacao concluida com sucesso. Se marcou a opcao abaixo, o PATH foi atualizado." />
+    <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Adicionar Astra ao PATH para usar no terminal" />
+    <WixVariable Id="WixUILicenseRtf" Value="installer\LICENSE.rtf" />
+
+    <UIRef Id="WixUI_InstallDir" />
+
+    <Feature Id="MainFeature" Title="Astra CLI" Level="1">
+      <ComponentRef Id="CmpAstraExe" />
+      <ComponentRef Id="CmpAstraPath" />
+      <ComponentRef Id="CmpCleanupRoot" />
+    </Feature>
+  </Product>
+
+  <Fragment>
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="LocalAppDataFolder">
+        <Directory Id="INSTALLROOT" Name="Astra">
+          <Directory Id="INSTALLBIN" Name="bin" />
+        </Directory>
+      </Directory>
+    </Directory>
+  </Fragment>
+
+  <Fragment>
+    <DirectoryRef Id="INSTALLBIN">
+      <Component Id="CmpAstraExe" Guid="{7C4D2E01-82CB-4A2D-B6AB-5C77F4E8A901}">
+        <File Id="FileAstraExe" Source="astra.exe" />
+        <RegistryValue Root="HKCU" Key="Software\Astra" Name="InstalledExe" Type="integer" Value="1" KeyPath="yes" />
+        <RemoveFolder Id="RemoveInstallBin" Directory="INSTALLBIN" On="uninstall" />
+      </Component>
+
+      <Component Id="CmpAstraPath" Guid="{7AF13DBB-7B11-4D1E-8E17-8B0792FBD6D2}">
+        <Condition>WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1</Condition>
+        <Environment Id="EnvPathAstra" Name="PATH" Action="set" Part="last" System="no" Permanent="no" Value="[INSTALLBIN]" />
+        <RegistryValue Root="HKCU" Key="Software\Astra" Name="PathAdded" Type="integer" Value="1" KeyPath="yes" />
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+
+  <Fragment>
+    <DirectoryRef Id="INSTALLROOT">
+      <Component Id="CmpCleanupRoot" Guid="{D8C65C72-985F-4698-9BD7-83701D60EE20}">
+        <RegistryValue Root="HKCU" Key="Software\Astra" Name="CleanupRoot" Type="integer" Value="1" KeyPath="yes" />
+        <RemoveFolder Id="RemoveInstallRoot" Directory="INSTALLROOT" On="uninstall" />
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+</Wix>
