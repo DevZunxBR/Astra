@@ -1,4 +1,5 @@
 #include "commands.hpp"
+#include "version.hpp"
 #include <cstdlib>
 #include <filesystem>
 #include <fstream>
@@ -9,7 +10,6 @@
 namespace fs = std::filesystem;
 
 namespace {
-const std::string kCurrentVersion = "0.2.0";
 const std::string kLatestInfoUrl = "https://raw.githubusercontent.com/DevZunxBR/Astra/main/latest.json";
 
 std::string read_file(const fs::path& p) {
@@ -65,8 +65,9 @@ int update_command(const std::vector<std::string>&) {
         return 1;
     }
 
-    if (compare_version(latest_version, kCurrentVersion) <= 0) {
-        std::cout << "Astra ja esta atualizado (versao " << kCurrentVersion << ").\n";
+    const std::string current_version = astra::kVersion;
+    if (compare_version(latest_version, current_version) <= 0) {
+        std::cout << "Astra ja esta atualizado (versao " << current_version << ").\n";
         return 0;
     }
 
@@ -86,11 +87,11 @@ int update_command(const std::vector<std::string>&) {
     std::string install_cmd = "msiexec /i \"" + installer.string() + "\" /passive /norestart";
     int code = std::system(install_cmd.c_str());
     if (code != 0) {
-        std::cout << "Falha na instalacao automatica. Rode manualmente: " << installer.string() << "\n";
+        std::cout << "Falha na instalacao automatica (codigo " << code << "). Rode manualmente: " << installer.string() << "\n";
         return 1;
     }
 
-    std::cout << "Atualizacao iniciada com sucesso.\n";
+    std::cout << "Atualizacao concluida. Feche e abra o terminal para carregar a nova versao.\n";
     return 0;
 #else
     std::cout << "astra update disponivel apenas no Windows por enquanto.\n";

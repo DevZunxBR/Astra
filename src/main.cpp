@@ -1,4 +1,5 @@
-﻿#include "cli/commands.hpp"
+#include "cli/commands.hpp"
+#include "version.hpp"
 #include <iostream>
 #include <string>
 #include <vector>
@@ -9,7 +10,6 @@
 #endif
 
 namespace {
-const char* kAstraVersion = "0.2.0";
 #ifdef _WIN32
 HANDLE g_out = INVALID_HANDLE_VALUE;
 
@@ -169,10 +169,11 @@ int main(int argc, char** argv) {
     if (cmd == "update") return cli::update_command(args);
     if (cmd == "ui") return run_setup_wizard();
     if (cmd == "--version" || cmd == "version") {
-        std::cout << "astra " << kAstraVersion << "\n";
+        std::cout << "astra " << astra::kVersion << "\n";
         return 0;
     }
 
     std::cout << "Comando desconhecido: " << cmd << "\n";
     return 1;
 }
+
