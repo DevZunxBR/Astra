@@ -10,6 +10,7 @@ SOURCES = \
 	src/cli/build_command.cpp \
 	src/cli/deploy_command.cpp \
 	src/cli/run_command.cpp \
+	src/cli/update_command.cpp \
 	src/server/http_server.cpp \
 	src/server/live_reload.cpp \
 	src/transpiler/ast_to_html.cpp \

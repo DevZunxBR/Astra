@@ -9,6 +9,7 @@
 #endif
 
 namespace {
+const char* kAstraVersion = "0.2.0";
 #ifdef _WIN32
 HANDLE g_out = INVALID_HANDLE_VALUE;
 
@@ -165,7 +166,12 @@ int main(int argc, char** argv) {
     if (cmd == "build") return cli::build_command(args);
     if (cmd == "deploy") return cli::deploy_command(args);
     if (cmd == "run") return cli::run_command(args);
+    if (cmd == "update") return cli::update_command(args);
     if (cmd == "ui") return run_setup_wizard();
+    if (cmd == "--version" || cmd == "version") {
+        std::cout << "astra " << kAstraVersion << "\n";
+        return 0;
+    }
 
     std::cout << "Comando desconhecido: " << cmd << "\n";
     return 1;
