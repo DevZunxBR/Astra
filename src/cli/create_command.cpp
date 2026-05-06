@@ -34,28 +34,24 @@ void create_base(const fs::path& root) {
         "  }\n"
         "}\n");
 
-    write_file(root / "src/index.html",
-        "<!doctype html>\n"
-        "<html lang=\"pt-BR\">\n"
-        "  <head>\n"
-        "    <meta charset=\"utf-8\" />\n"
-        "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />\n"
-        "    <title>Astra App</title>\n"
-        "    <link rel=\"stylesheet\" href=\"./main.css\" />\n"
-        "  </head>\n"
-        "  <body>\n"
-        "    <main>\n"
-        "      <h1>Astra</h1>\n"
-        "      <p>Projeto criado com sucesso.</p>\n"
-        "    </main>\n"
-        "  </body>\n"
-        "</html>\n");
+    write_file(root / "src/app.asf",
+        "page App {\n"
+        "  <main>\n"
+        "    <h1>Astra</h1>\n"
+        "    <p>Projeto criado com sucesso.</p>\n"
+        "  </main>\n"
+        "}\n");
 
-    write_file(root / "src/main.css",
-        "*{box-sizing:border-box}\n"
-        "body{margin:0;font-family:Arial,sans-serif;background:#f6f7fb;color:#111;padding:2rem}\n"
-        "main{max-width:760px;margin:0 auto}\n"
-        "h1{margin:0 0 .5rem}\n");
+    write_file(root / "src/app.asl",
+        "main {\n"
+        "  max-width: 760px;\n"
+        "  margin: 0 auto;\n"
+        "  padding: 2rem;\n"
+        "  font-family: Arial, sans-serif;\n"
+        "}\n"
+        "h1 {\n"
+        "  margin-bottom: .5rem;\n"
+        "}\n");
 
 }
 }

@@ -56,19 +56,26 @@ int init_command(const std::vector<std::string>&) {
     );
 
     write_file_if_missing(
-        root / "src/app.astra",
-        "component App(props) {\n"
-        "  style {\n"
-        "    main { max-width: 760px; margin: 0 auto; padding: 2rem; font-family: Arial, sans-serif; }\n"
-        "    h1 { margin-bottom: .5rem; }\n"
-        "  }\n"
-        "\n"
-        "  render {\n"
-        "    <main>\n"
-        "      <h1>{props.title}</h1>\n"
-        "      <p>Seu app Astra comecou.</p>\n"
-        "    </main>\n"
-        "  }\n"
+        root / "src/app.asf",
+        "page App {\n"
+        "  <main>\n"
+        "    <h1>Astra</h1>\n"
+        "    <p>Interface feita com .asf</p>\n"
+        "  </main>\n"
+        "}\n",
+        created_any
+    );
+
+    write_file_if_missing(
+        root / "src/app.asl",
+        "main {\n"
+        "  max-width: 760px;\n"
+        "  margin: 0 auto;\n"
+        "  padding: 2rem;\n"
+        "  font-family: Arial, sans-serif;\n"
+        "}\n"
+        "h1 {\n"
+        "  margin-bottom: .5rem;\n"
         "}\n",
         created_any
     );

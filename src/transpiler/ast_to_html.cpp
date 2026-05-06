@@ -94,24 +94,50 @@ void copy_static_tree(const fs::path& src_root, const fs::path& out_root, bool& 
     for (auto& e : fs::recursive_directory_iterator(src_root)) {
         if (!e.is_regular_file()) continue;
         auto ext = e.path().extension().string();
-        if (ext != ".html" && ext != ".css" && ext != ".js") continue;
+        if (ext != ".js") continue;
         auto rel = fs::relative(e.path(), src_root);
         write_file(out_root / rel, read_file(e.path()));
         if (ext == ".html") generated_any_page = true;
     }
 }
 
+std::string extract_asf_markup(std::string src) {
+    auto pos = src.find("page");
+    if (pos == std::string::npos) return "<h1>Astra page</h1>";
+    auto lb = src.find('{', pos);
+    if (lb == std::string::npos) return "<h1>Astra page</h1>";
+    size_t i = lb;
+    int depth = 0;
+    size_t rb = std::string::npos;
+    for (; i < src.size(); ++i) {
+        if (src[i] == '{') depth++;
+        else if (src[i] == '}') {
+            depth--;
+            if (depth == 0) { rb = i; break; }
+        }
+    }
+    if (rb == std::string::npos || rb <= lb) return "<h1>Astra page</h1>";
+    return src.substr(lb + 1, rb - lb - 1);
+}
+
 void compile_astra_files(const fs::path& src_root, const fs::path& out_root, bool& generated_any_page) {
+    std::string markup;
+    std::string style;
     for (auto& e : fs::recursive_directory_iterator(src_root)) {
         if (!e.is_regular_file()) continue;
-        if (e.path().extension() != ".astra") continue;
-        const std::string src = read_file(e.path());
-        const std::string html = extract_render(src);
-        const std::string css = extract_style(src);
-        write_file(out_root / "index.html", "<!doctype html><html><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"><title>Astra App</title><link rel=\"stylesheet\" href=\"./app.css\"></head><body>" + html + "<script src=\"./app.js\"></script></body></html>");
-        write_file(out_root / "app.css", css);
+        const std::string ext = e.path().extension().string();
+        if (ext == ".asf") {
+            markup = extract_asf_markup(read_file(e.path()));
+            generated_any_page = true;
+        } else if (ext == ".asl") {
+            style += read_file(e.path()) + "\n";
+        }
+    }
+    if (generated_any_page) {
+        if (style.empty()) style = "body{font-family:Arial,sans-serif;padding:2rem}";
+        write_file(out_root / "index.html", "<!doctype html><html><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"><title>Astra App</title><link rel=\"stylesheet\" href=\"./app.css\"></head><body>" + markup + "<script src=\"./app.js\"></script></body></html>");
+        write_file(out_root / "app.css", style);
         write_file(out_root / "app.js", "console.log('Astra app loaded');");
-        generated_any_page = true;
     }
 }
 
